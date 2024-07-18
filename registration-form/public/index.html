@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Registration Form</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h2>User Registration Form</h2>
+      <form id="registrationForm" action="/register" method="POST">
+        <fieldset>
+          <legend>Personal Information</legend>
+          <div class="form-control">
+            <label for="name">Full Name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div class="form-control">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-control">
+            <label for="phone">Phone Number:</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              pattern="[0-9]{10}"
+              placeholder="10-digit number"
+              required
+            />
+          </div>
+          <div class="form-control">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Address Information</legend>
+          <div class="form-control">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="4" required></textarea>
+          </div>
+          <div class="form-control">
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required />
+          </div>
+          <div class="form-control">
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required />
+          </div>
+          <div class="form-control">
+            <label for="zip">ZIP Code:</label>
+            <input
+              type="text"
+              id="zip"
+              name="zip"
+              pattern="[0-9]{6}"
+              placeholder="6-digit number"
+              required
+            />
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend>Account Information</legend>
+          <div class="form-control">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required />
+          </div>
+          <div class="form-control">
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+          <div class="form-control">
+            <label for="confirmPassword">Confirm Password:</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              required
+            />
+          </div>
+        </fieldset>
+
+        <button type="submit">Register</button>
+      </form>
+
+      <div id="registeredData" class="registered-data">
+            <!-- Registered user details will be displayed here -->
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+            
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to register user');
+                }
+
+                const responseData = await response.text(); 
+
+                const registeredDataDiv = document.getElementById('registeredData');
+                registeredDataDiv.innerHTML = `
+                    <div class="card">
+                        <h3>Registration Successful</h3>
+                        <p>${responseData}</p>
+                    </div>
+                `;
+
+                this.reset();
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to register user. Please try again.');
+            }
+        });
+    </script>
+  </body>
+</html>
